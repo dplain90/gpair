@@ -5,5 +5,5 @@ read -r current_pair < $input
 
 full_commit_message="$commit_message\n\nCoauthored by $current_pair"
 
-echo $full_commit_message
-git commit -m "$full_commit_message"
+msg=$(echo $full_commit_message)
+git commit -m $msg
