@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+set -eu
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BINARY_DIR="$(dirname "${SCRIPT_DIR}")"/bin
+
+CMD_DIR="$(dirname "${SCRIPT_DIR}")"/cmd
+LIB_DIR="$(dirname "${SCRIPT_DIR}")"/lib
+
+source "${LIB_DIR}"/constants.sh
+source "${LIB_DIR}"/output.sh
+
+echo-usage() {
+  echo -e "$(output::banner)"
+  echo -e "Git CLI for co-author pair programming.\n"
+  echo -e "$(output::bold "Usage:")
+    gpair [COMMAND] [options] [ARGS]
+    gpair -h|--help
+    "
+  echo -e "$(output::bold "Commands:")
+    pair    Print current pair
+    ls      Lists available pairs
+    set     Set a pair/co-author
+    clear   Clears the current pair
+    commit  Makes a commit with current pair as the co-author
+  "
+  echo "Please type -h | --help after a command to get detailed usage information\n"
+}
+
+if [ $# -eq 0 ]; then
+  echo-usage
+  exit 0
+fi
+
+cmd=$1
+shift
+
+case $cmd in
+  -h | --help)
+    echo-usage
+    exit 0
+  ;;
+  pair)
+    "${CMD_DIR}"/print-pair.sh "$@"
+  ;;
+  ls)
+    "${CMD_DIR}"/list-pairs.sh "$@"
+  ;;
+  set)
+    "${CMD_DIR}"/set-pair.sh "$@"
+  ;;
+  clear)
+    "${CMD_DIR}"/clear-pair.sh "$@"
+  ;;
+  commit)
+    "${CMD_DIR}"/commit-with-pair.sh "$@"
+  ;;
+  *)
+    echo "Invalid argument!"
+    echo-usage
+    exit 1
+esac
