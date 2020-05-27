@@ -30,7 +30,7 @@ echo-usage() {
     clear   Clears the current pair
     commit  Makes a commit with current pair as the co-author
   "
-  echo "Please type -h | --help after a command to get detailed usage information\n"
+  echo -e "Please type -h | --help after a command to get detailed usage information\n"
 }
 
 if [ $# -eq 0 ]; then
