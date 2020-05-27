@@ -1,6 +1,53 @@
 #!/bin/bash
 
-current_pair_initial=$1
+source $GPAIR_CONSTANTS_PATH
+source $GPAIR_OUTPUTS_PATH
+
+
+echo-set-pair-usage() {
+  echo -e "\n $(output::bold::green " USAGE:") gpair set <initials> [options] \n"
+  echo -e " Sets your current pair.\n"
+  echo -e " $(output::bold::green "[OPTIONS]:")\n"
+  echo -e "   $(output::help_flag "-h" "--help")        Print usage information"
+  echo -e "\n $(output::bold::green " EXAMPLE:") $(output::bold::cyan "gpair set dp")\n"
+}
+
+
+POSITIONAL=()
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -h|--help)
+    echo-set-pair-usage
+    exit 0
+    ;;
+    *)
+    if [ -z "$current_pair_initial" ]; then
+      current_pair_initial=$1
+      shift
+    else
+      invalid_args+=("$1") # save it in an array for later
+      shift # past argument
+      shift # past value
+    fi
+    ;;
+esac
+done
+
+invalid_args_length=${#invalid_args[@]}
+
+if [ $invalid_args_length != "0" ]; then
+  echo -e "\n$(output::bold::red " Error processing the following arguments: \n")"
+  for (( i=0; i<$invalid_args_length; i++ )); do echo -e "    ${invalid_args[$i]} is not a valid argument." ; done
+  echo -e "\n$(output::bold " -----------------------------------------")"
+  echo-set-pair-usage
+  exit 1
+fi
+
+set -- "${invalid_args[@]}" # restore positional parameters
 
 root_git_directory=$(git rev-parse --show-toplevel)
 

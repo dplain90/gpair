@@ -8,8 +8,11 @@ BINARY_DIR="$(dirname "${SCRIPT_DIR}")"/bin
 CMD_DIR="$(dirname "${SCRIPT_DIR}")"/cmd
 LIB_DIR="$(dirname "${SCRIPT_DIR}")"/lib
 
+export GPAIR_CONSTANTS_PATH="${LIB_DIR}"/constants.sh
+export GPAIR_OUTPUTS_PATH="${LIB_DIR}"/outputs.sh
+
 source "${LIB_DIR}"/constants.sh
-source "${LIB_DIR}"/output.sh
+source "${LIB_DIR}"/outputs.sh
 
 echo-usage() {
   echo -e "$(output::banner)"
@@ -22,6 +25,8 @@ echo-usage() {
     pair    Print current pair
     ls      Lists available pairs
     set     Set a pair/co-author
+    add     Adds a new author to pairs list
+    remove  Removes a author from the pairs list  
     clear   Clears the current pair
     commit  Makes a commit with current pair as the co-author
   "
@@ -46,6 +51,12 @@ case $cmd in
   ;;
   ls)
     "${CMD_DIR}"/list-pairs.sh "$@"
+  ;;
+  add)
+    "${CMD_DIR}"/add-pair-author.sh "$@"
+  ;;
+  remove)
+    "${CMD_DIR}"/remove-pair-author.sh "$@"
   ;;
   set)
     "${CMD_DIR}"/set-pair.sh "$@"

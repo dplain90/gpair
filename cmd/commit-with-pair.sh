@@ -1,5 +1,34 @@
 #!/bin/bash
 
+source $GPAIR_CONSTANTS_PATH
+source $GPAIR_OUTPUTS_PATH
+
+echo-commit-usage() {
+  echo -e "\n $(output::bold::green " USAGE:") gpair commit \"commit message\" [options]\n"
+  echo -e " Creates a commit with current pair set as co-author.\n"
+  echo -e " $(output::bold::green "[OPTIONS]:")\n"
+  echo -e "   $(output::help_flag "-h" "--help")        Print usage information"
+  echo -e "\n   $(output::bold::orange "All native git commit options are available.") [https://git-scm.com/docs/git-commit]
+  "
+  echo -e "\n $(output::bold::green " EXAMPLES:")\n\n $(output::bold::cyan "  gpair commit \"feat(dashboard): initial commit\"")\n$(output::bold::cyan "   gpair commit \"add awesome feature\" --no-verify")\n"
+}
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -h|--help)
+    echo-commit-usage
+    exit 0
+    ;;
+    *)    # unknown option
+    shift # past value
+    ;;
+esac
+done
+
+
 commit_message=$1
 other_args=$(echo "${@:2}")
 
