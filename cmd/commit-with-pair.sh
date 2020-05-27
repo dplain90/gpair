@@ -42,6 +42,6 @@ fi
 
 read -r current_pair < $current_pair_file
 
-full_commit_message=$(echo -e "$commit_message\n\nCoauthored by $current_pair")
+full_commit_message=$(echo -e "$commit_message\n\nCo-authored-by: $current_pair")
 
 git commit -m "$full_commit_message" $other_args
