@@ -2,9 +2,37 @@
 
 ## Installation
 
+  1. `git clone git@github.com:dplain90/gpair.git`  
+  2. Add the path for `/gpair/bin` to your `$PATH` variable in your `bash_profile` or `.zshrc`
+  3. `source ~/.bash_profile` or `source ~/.zshrc`
+  4. `gpair`
 
 ## Setup
 
+  - In the root directory of your repository add a file called `.pairs`. This file stores pair data for authors participating in that repo. Add all the co-authors for your repo to this file.
+  
+    **EXAMPLE:**
+    
+    The format for each author is: ```initials;name;email```
+    ```
+      dp;Danny Plain;dplain@gmail.com
+      js;John Smith;jsmith@someemail.com
+      mj;Mary Joseph;mary@mary.com
+    ```
+
+    Make sure each author is on a seperate line and values are deliminated with a semicolon.
+
+  - Add `.current-pair` to your `.gitignore`.
+
+## Usage
+
+  At the beginning of a pairing session, run `gpair set <pair_initials>`
+
+  When you are ready to commit just run `gpair commit "commit message" [git options]`. Gpair will append the co-authoring lines to your commit message, then create the commit. 
+  
+  NOTE: You can pass any available `git commit` options after the commit message. EX: `--no-verify`
+
+  When you are done pairing, run `gpair clear` to remove your current pair.
 
 ## Available Commands
 
