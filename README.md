@@ -3,8 +3,8 @@
 ## Installation
 
   1. `git clone git@github.com:dplain90/gpair.git`  
-  2. Add the path for `/gpair/bin` to your `$PATH` variable in your `bash_profile` or `.zshrc`
-  3. `source ~/.bash_profile` or `source ~/.zshrc`
+  2. Add the path for `/gpair/bin` to your `$PATH` variable in your `bash_profile`  OR  `.zshrc`
+  3. `source ~/.bash_profile`  OR  `source ~/.zshrc`
   4. `gpair`
 
 ## Setup
@@ -13,14 +13,12 @@
   
     **EXAMPLE:**
     
-    The format for each author is: ```initials;name;email```
-    ```
-      dp;Danny Plain;dplain@gmail.com
-      js;John Smith;jsmith@someemail.com
-      mj;Mary Joseph;mary@mary.com
-    ```
-
-    Make sure each author is on a seperate line and values are deliminated with a semicolon.
+    The format for each author is: ```[<Initials>]: <Name>; <Github Email>```
+  ```
+  pairs:
+    [dp]: Danny Plain; dplain@gmail.com
+    [js]: Jane Smith; jsmith@yahoo.com
+  ```
 
   - Add `.current-pair` to your `.gitignore`.
 
