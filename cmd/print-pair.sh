@@ -2,6 +2,7 @@
 
 source $GPAIR_CONSTANTS_PATH
 source $GPAIR_OUTPUTS_PATH
+source $GPAIR_UTILS_PATH
 
 echo-print-pair-usage() {
   echo -e "\n $(output::bold::green " USAGE:") gpair pair [options]\n"
@@ -29,24 +30,14 @@ case $key in
 esac
 done
 
-invalid_args_length=${#invalid_args[@]}
+handle-invalid-args echo-print-pair-usage $invalid_args
 
-if [ $invalid_args_length != "0" ]; then
-  echo -e "\n$(output::bold::red " Error processing the following arguments: \n")"
-  for (( i=0; i<$invalid_args_length; i++ )); do echo -e "    ${invalid_args[$i]} is not a valid argument." ; done
-  echo -e "\n$(output::bold " -----------------------------------------")"
-  echo-print-pair-usage
-  exit 1
+
+if [ ! -f $GPAIR_CURRENT_PAIR_PATH ]; then
+    echo -e "\n  No pair set. \n"
+    exit 1
 fi
 
-root_git_directory=$(git rev-parse --show-toplevel)
+read -r current_pair < $GPAIR_CURRENT_PAIR_PATH
 
-current_pair_file="$root_git_directory/.current-pair"
-
-if [ ! -f $current_pair_file ]; then
-    echo "No pair set."
-fi
-
-read -r current_pair < $current_pair_file
-
-echo $current_pair
+echo -e "\n  $current_pair\n"

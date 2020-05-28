@@ -2,6 +2,7 @@
 
 source $GPAIR_CONSTANTS_PATH
 source $GPAIR_OUTPUTS_PATH
+source $GPAIR_UTILS_PATH
 
 echo-clear-usage() {
   echo -e "\n $(output::bold::green " USAGE:") gpair clear [options]\n"
@@ -30,20 +31,10 @@ case $key in
 esac
 done
 
-invalid_args_length=${#invalid_args[@]}
+handle-invalid-args echo-clear-usage $invalid_args
 
-if [ $invalid_args_length != "0" ]; then
-  echo -e "\n$(output::bold::red " Error processing the following arguments: \n")"
-  for (( i=0; i<$invalid_args_length; i++ )); do echo -e "    ${invalid_args[$i]} is not a valid argument." ; done
-  echo -e "\n$(output::bold " -----------------------------------------")"
-  echo-clear-usage
-  exit 1
+if [ -f $GPAIR_CURRENT_PAIR_PATH ]; then
+  rm "$GPAIR_CURRENT_PAIR_PATH"
 fi
 
-
-root_git_directory=$(git rev-parse --show-toplevel)
-
-current_pair_path="$root_git_directory/.current-pair"
-rm "$current_pair_path"
-
-echo "Success! Current pair has been cleared."
+echo -e "\n  $(output::bold::green "Success!") Current pair has been cleared.\n"

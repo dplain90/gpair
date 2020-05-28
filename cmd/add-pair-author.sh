@@ -2,15 +2,12 @@
 
 source $GPAIR_CONSTANTS_PATH
 source $GPAIR_OUTPUTS_PATH
+source $GPAIR_UTILS_PATH
 
-root_git_directory=$(git rev-parse --show-toplevel)
 
-pair_file="$root_git_directory/.pairs"
-
-if [ ! -f $pair_file ]; then
+if [ ! -f $GPAIR_PAIRS_PATH ]; then
     echo "Cannot find pairs file. Make sure .pairs file is in the root directory of the repository."
 fi
-
 
 echo-add-pair-usage() {
   echo -e "\n $(output::bold::green " USAGE:") gpair add [options]\n"
@@ -24,7 +21,7 @@ echo-add-pair-usage() {
 }
 
 
-POSITIONAL=()
+invalid_args=()
 
 while [[ $# -gt 0 ]]
 do
@@ -58,17 +55,14 @@ case $key in
 esac
 done
 
-invalid_args_length=${#invalid_args[@]}
 
-if [ $invalid_args_length != "0" ]; then
-  echo -e "\n$(output::bold::red " Error processing the following arguments: \n")"
-  for (( i=0; i<$invalid_args_length; i++ )); do echo -e "    ${invalid_args[$i]} is not a valid argument." ; done
-  echo -e "\n$(output::bold " -----------------------------------------")"
-  echo-add-pair-usage
-  exit 1
-fi
+handle-invalid-args echo-add-pair-usage $invalid_args
 
-set -- "${invalid_args[@]}" # restore positional parameters
+handle-missing-arg "Author name is missing." echo-add-pair-usage $pair_author_name
+
+handle-missing-arg "Author email is missing." echo-add-pair-usage $pair_author_email
+
+handle-missing-arg "Initials are missing." echo-add-pair-usage $pair_author_initials
 
 initials_exist=false
 existing_initials_pair_name=""
@@ -76,20 +70,22 @@ existing_initials_pair_email=""
 
 while IFS= read -r author
 do
-  IFS=';' read -ra author_attr <<< "$author"
-  pair_initials="${author_attr[0]}"
-  pair_name="${author_attr[1]}"
-  pair_email="${author_attr[2]}"
-  if [ $pair_initials == $pair_author_initials ]; then
-    initials_exist=true
-    existing_initials_pair_name="$pair_name"
-    existing_initials_pair_email="$pair_email"
+  if [[ $author =~ $GPAIR_AUTHOR_LINE_REGEX ]]
+  then
+      pair_initials="${BASH_REMATCH[1]}"
+      pair_name="${BASH_REMATCH[2]}"
+      pair_email="${BASH_REMATCH[3]}"
+      if [ $pair_initials == $pair_author_initials ]; then
+        initials_exist=true
+        existing_initials_pair_name="$pair_name"
+        existing_initials_pair_email="$pair_email"
+      fi
   fi
-done < "$pair_file"
+done < "$GPAIR_PAIRS_PATH"
 
 if [ $initials_exist == true ]; then
   echo -e "Sorry! The initials $pair_author_initials are already in use by:\n $existing_initials_pair_name <$existing_initials_pair_email> \nPlease try again with a different set of initials."
 else
-  echo "$pair_author_initials;$pair_author_name;$pair_author_email" >> $pair_file
+  echo "  [$pair_author_initials]: $pair_author_name; $pair_author_email" >> $GPAIR_PAIRS_PATH
   echo -e "Success! $pair_author_name <$pair_author_email> has been added with the initials $pair_author_initials"
 fi

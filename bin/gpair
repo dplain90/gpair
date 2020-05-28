@@ -7,9 +7,20 @@ BINARY_DIR="$(dirname "${SCRIPT_DIR}")"/bin
 
 CMD_DIR="$(dirname "${SCRIPT_DIR}")"/cmd
 LIB_DIR="$(dirname "${SCRIPT_DIR}")"/lib
+UTILS_DIR="$(dirname "${SCRIPT_DIR}")"/utils
+
+ROOT_GIT_DIR=$(git rev-parse --show-toplevel)
+
+export GPAIR_CURRENT_PAIR_PATH="$ROOT_GIT_DIR/.current-pair"
+export GPAIR_PAIRS_PATH="$ROOT_GIT_DIR/.pairs"
+export GPAIR_AUTHOR_LINE_REGEX='^[[:space:]][[:space:]]\[(.+)\]:[[:space:]](.+);[[:space:]](.+)$'
+
 
 export GPAIR_CONSTANTS_PATH="${LIB_DIR}"/constants.sh
 export GPAIR_OUTPUTS_PATH="${LIB_DIR}"/outputs.sh
+export GPAIR_UTILS_PATH="${UTILS_DIR}"/utils.sh
+
+
 
 source "${LIB_DIR}"/constants.sh
 source "${LIB_DIR}"/outputs.sh

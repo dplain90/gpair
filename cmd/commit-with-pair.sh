@@ -2,6 +2,7 @@
 
 source $GPAIR_CONSTANTS_PATH
 source $GPAIR_OUTPUTS_PATH
+source $GPAIR_UTILS_PATH
 
 echo-commit-usage() {
   echo -e "\n $(output::bold::green " USAGE:") gpair commit \"commit message\" [options]\n"
@@ -22,25 +23,24 @@ case $key in
     echo-commit-usage
     exit 0
     ;;
-    *)    # unknown option
+    *)
+    commit_message=$1    # unknown option
     shift # past value
     ;;
 esac
 done
 
+handle-missing-arg "Commit message is missing."  echo-commit-usage $commit_message
 
-commit_message=$1
 other_args=$(echo "${@:2}")
 
-root_git_directory=$(git rev-parse --show-toplevel)
 
-current_pair_file="$root_git_directory/.current-pair"
-
-if [ ! -f $current_pair_file ]; then
-    echo "  No pair has been set. You can set your pair with the following command:\n  git set <initials>\n  EX: git set dp"
+if [ ! -f $GPAIR_CURRENT_PAIR_PATH ]; then
+    echo -e "  No pair has been set. You can set your pair with the following command:\n  git set <initials>\n  EX: git set dp"
+    exit 1
 fi
 
-read -r current_pair < $current_pair_file
+read -r current_pair < $GPAIR_CURRENT_PAIR_PATH
 
 full_commit_message=$(echo -e "$commit_message\n\nCo-authored-by: $current_pair")
 

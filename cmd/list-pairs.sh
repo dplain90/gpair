@@ -2,6 +2,7 @@
 
 source $GPAIR_CONSTANTS_PATH
 source $GPAIR_OUTPUTS_PATH
+source $GPAIR_UTILS_PATH
 
 echo-list-pairs-usage() {
   echo -e "\n $(output::bold::green " USAGE:") gpair ls [options]\n"
@@ -29,32 +30,32 @@ case $key in
 esac
 done
 
-invalid_args_length=${#invalid_args[@]}
+handle-invalid-args echo-list-pairs-usage $invalid_args
 
-if [ $invalid_args_length != "0" ]; then
-  echo -e "\n$(output::bold::red " Error processing the following arguments: \n")"
-  for (( i=0; i<$invalid_args_length; i++ )); do echo -e "    ${invalid_args[$i]} is not a valid argument." ; done
-  echo -e "\n$(output::bold " -----------------------------------------")"
-  echo-clear-usage
-  exit 1
-fi
-
-
-root_git_directory=$(git rev-parse --show-toplevel)
-
-pair_file="$root_git_directory/.pairs"
-
-if [ ! -f $pair_file ]; then
+if [ ! -f $GPAIR_PAIRS_PATH ]; then
     echo "Cannot find pairs file. Make sure .pairs file is in the root directory of the repository."
 fi
 
+if [ -f $GPAIR_CURRENT_PAIR_PATH ]; then
+  read -r current_pair < $GPAIR_CURRENT_PAIR_PATH
+fi
 
+echo ""
 while IFS= read -r author
 do
-  IFS=';' read -ra author_attr <<< "$author"
-  pair_initials="${author_attr[0]}"
-  pair_name="${author_attr[1]}"
-  pair_email="${author_attr[2]}"
+  
+  if [[ $author =~ $GPAIR_AUTHOR_LINE_REGEX ]]
+  then
+      pair_initials="${BASH_REMATCH[1]}"
+      pair_name="${BASH_REMATCH[2]}"
+      pair_email="${BASH_REMATCH[3]}"
 
-  echo -e "  $pair_initials: $pair_name <$pair_email>"
-done < "$pair_file"
+      if [[ "$pair_name <$pair_email>" == $current_pair ]]
+      then
+        echo -e "  $(output::bold::green "$pair_initials: $pair_name <$pair_email>")"
+      else
+        echo -e "  $pair_initials: $pair_name <$pair_email>"
+      fi
+  fi
+done < "$GPAIR_PAIRS_PATH"
+echo ""
