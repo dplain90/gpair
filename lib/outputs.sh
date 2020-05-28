@@ -47,6 +47,10 @@ output::cyan() {
   echo -e "${CYAN}$1${NORMAL}"
 }
 
+output::blue() {
+  echo -e "${BLUE}$1${NORMAL}"
+}
+
 output::green() {
   echo -e "${GREEN}$1${NORMAL}"
 }
@@ -55,9 +59,6 @@ output::purple() {
   echo -e "${PURPLE}$1${NORMAL}"
 }
 
-output::red() {
-  echo -e "${RED}$1${NORMAL}"
-}
 output::red() {
   echo -e "${RED}$1${NORMAL}"
 }
