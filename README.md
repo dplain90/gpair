@@ -52,7 +52,6 @@ Sets a current pair
 
 Creates a commit, appending your pair's information as the co-author.
 
-
 ### `gpair clear` 
 
 Clears your current pair.
@@ -68,3 +67,7 @@ Displays your current pair's information
 ### `gpair add`
 
 Adds a new author to the repository's pair list
+
+### `gpair remove`
+
+Removes an author from the repository's pair list
