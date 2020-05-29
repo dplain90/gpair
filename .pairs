@@ -1,3 +1,4 @@
-dp;Danny Plain;dplain@gmail.com
-bp;Brian Plantico;bplantico@gmail.com
-jf;Jacob Sheffield;j@gmail.com
+pairs:
+  # [<Initials>]: <Name>; <Github Email>
+  [dp]: Danny Plain; dplain@gmail.com
+  [js]: Jane Smith; jsmith@yahoo.com
