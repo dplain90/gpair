@@ -7,6 +7,14 @@
   3. `source ~/.bash_profile`  OR  `source ~/.zshrc`
   4. `gpair`
 
+  **Optional Steps**
+
+   - To add an alias to gpair for git:  
+      `git config --global alias.pair '!gpair'`
+
+     Then you can run gpair through the command:  
+      `git pair`
+
 ## Setup
 
   - In the root directory of your repository add a file called `.pairs`. This file stores pair data for authors participating in that repo. Add all the co-authors for your repo to this file.
